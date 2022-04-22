@@ -147,7 +147,8 @@ def visual_one_file(calib_path, image_path, label_path, output_path, threshold):
 
 def visual_whole_folder(calib_dir, image_dir, label_dir, index_path, output_dir, threshold):
     if index_path:
-        indices = index_path.read().strip().splitlines()
+        with open(index_path) as index_file:
+            indices = index_file.read().strip().splitlines()
         for index in tqdm(indices):
             calib_path = os.path.join(calib_dir, f'{index}.txt')
             image_path = next(iglob(os.path.join(image_dir, f'{index}.*')))
@@ -204,6 +205,12 @@ def main():
         label_dir = args.label
     elif not label_dir:
         print("Labels directory is not specified.")
+        return
+
+    if args.output:
+        output_dir = args.output
+    elif not output_dir:
+        print("Output directory is not specified.")
         return
 
     if os.path.lexists(output_dir):

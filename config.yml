@@ -1,0 +1,27 @@
+directory:
+  # "output" and "root" is an absolute path or a relative path from script directory
+  output: 'output'
+  root: 'kitti'
+  # paths of calib, image, label and index are relative paths from root path
+  calib: 'training/calib'
+  image: 'training/image_2'
+  label: 'training/label_2'
+  # if index file is not used, set "index" empty, and image names will be indices
+  index: 'ImageSets/trainval.txt'
+
+# if the color of a type is not specified, the draw of this type will be skipped
+color_table:
+  Car:
+    3d: [255, 0, 0]
+    2d: [255, 255, 255]
+  Pedestrian:
+    3d: [0, 255, 0]
+    2d: [255, 255, 255]
+  Cyclist:
+    3d: [0, 0, 255]
+    2d: [255, 255, 255]
+
+thick_3d: 2
+thick_2d: 2
+orient_mask_weight: 0.2
+threshold: 0

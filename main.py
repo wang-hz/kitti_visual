@@ -1,10 +1,29 @@
+import logging
+import os
+from datetime import datetime
+from pathlib import Path
+
 import cv2
 import numpy as np
-import os
-from tqdm import tqdm
 import yaml
+from tqdm import tqdm
 
 from kitti import Kitti
+
+
+def set_logging_basic_config():
+    work_dir = Path(os.getcwd())
+    log_dir = Path(work_dir.parent, '.log')
+    log_dir.mkdir(exist_ok=True)
+    filename = datetime.now().strftime("%Y%m%d%H%M%S")
+    logging.basicConfig(
+        level=logging.INFO,
+        format='[%(asctime)s][%(levelname)s] %(message)s',
+        handlers=[
+            logging.FileHandler(Path(log_dir, f'{filename}.log')),
+            logging.StreamHandler()
+        ]
+    )
 
 
 def get_rotational_matrix(angle):
@@ -80,6 +99,7 @@ def draw_box_3d(image, corners, color, thickness, orient_mask_weight):
 
 
 def main():
+    set_logging_basic_config()
     root_dir = os.path.abspath(os.path.dirname(__file__))
     os.chdir(root_dir)
     with open(r'config.yml', 'r') as cfg_file:
@@ -93,7 +113,7 @@ def main():
     output_dir = directory['output']
     if os.path.lexists(output_dir):
         if not os.path.isdir(output_dir):
-            print("Output directory is not valid.")
+            logging.error(f'The output directory is not valid. output_dir=f{output_dir}')
             return
     else:
         os.mkdir(output_dir)

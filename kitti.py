@@ -1,7 +1,9 @@
-import cv2
-from glob import iglob
-import numpy as np
+import logging
 import os
+from glob import iglob
+
+import cv2
+import numpy as np
 
 
 class Kitti:
@@ -20,7 +22,7 @@ class Kitti:
                     if image_path and os.path.isfile(image_path):
                         image_filenames.append(os.path.basename(image_path))
                     else:
-                        print(f'Index file contains \"{index}\", but associated image is not existed.')
+                        logging.warning(f'The image does not exist. index=f{index}')
         else:
             # if index file is not specified, image names will be indices
             image_filenames = sorted(os.listdir(self.image_dir))
@@ -32,10 +34,10 @@ class Kitti:
             is_image_filename_valid = True
             if not os.path.isfile(os.path.join(self.calib_dir, f'{index}.txt')):
                 is_image_filename_valid = False
-                print(f'Calib file \"{index}.txt\" is not existed.')
+                logging.warning(f'The calib file does not exist. index=f{index}')
             if not os.path.isfile(os.path.join(self.label_dir, f'{index}.txt')):
                 is_image_filename_valid = False
-                print(f'Label file \"{index}.txt\" is not existed.')
+                logging.warning(f'The label file does not exist. index=f{index}')
             if is_image_filename_valid:
                 self.image_filenames.append(image_filename)
         return
